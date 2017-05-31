@@ -1,8 +1,11 @@
 # VMSignatureView
-A custom view to capture signature from user
+A custom view to capture signature from user.
 
-##Usage
-Add a new `UIView` where you want the capture signature. Set its class to `VMSignatureView` from storyboard and create an `@IBOutlet` property for it in your `UIViewController`
+#Usage
+
+* Add `VMSignatureView` class to your project
+
+* Add a new `UIView` where you want the capture signature. Set its class to `VMSignatureView` from storyboard and create an `@IBOutlet` property for it in your `UIViewController`
 
 #### Methods
 
