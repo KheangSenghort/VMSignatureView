@@ -1,7 +1,7 @@
 # VMSignatureView
 A custom view to capture signature from user.
 
-#Usage
+## Usage
 
 * Add `VMSignatureView` class to your project
 
