@@ -31,19 +31,12 @@ class VMSignatureView: UIView {
     }
     
     // Computed Property returns true if the view actually contains a signature
-    public var hasSignature: Bool {
-        get {
-            if self.path.isEmpty {
-                return false
-            } else {
-                return true
-            }
-        }
-    }
+    public var hasSignature = false
     
     // MARK: - Private properties
     private var path = UIBezierPath()
     private var incrementalImage: UIImage?
+    private var ptsCountAfterFirstTouch = 0
     
     // MARK: - Init
     
@@ -74,6 +67,7 @@ class VMSignatureView: UIView {
         if let touch: UITouch = touches.first {
             let touchPoint: CGPoint = touch.location(in: self)
             self.path.move(to: touchPoint)
+            self.ptsCountAfterFirstTouch = 0
         }
         
         if let delegate = self.delegate {
@@ -86,6 +80,7 @@ class VMSignatureView: UIView {
         if let touch: UITouch = touches.first {
             let touchPoint: CGPoint = touch.location(in: self)
             self.path.addLine(to: touchPoint)
+            self.ptsCountAfterFirstTouch += 1
             self.setNeedsDisplay()
         }
     }
@@ -93,9 +88,20 @@ class VMSignatureView: UIView {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch: UITouch = touches.first {
             let lastPoint: CGPoint = touch.location(in: self)
-            self.path.addLine(to: lastPoint)
+            if self.ptsCountAfterFirstTouch == 0 {
+                self.path.addArc(withCenter: lastPoint,
+                                 radius: self.strokeWidth/2,
+                                 startAngle: 0,
+                                 endAngle: CGFloat(Double.pi * 2),
+                                 clockwise: true)
+            }
+            else {
+                self.path.addLine(to: lastPoint)
+            }
             self.drawBitmap()
             self.setNeedsDisplay()
+            self.path.removeAllPoints()
+            self.hasSignature = true
         }
         
         if let delegate = self.delegate {
@@ -109,7 +115,7 @@ class VMSignatureView: UIView {
     
     //MARK: - Helper methods
     private func drawBitmap() {
-        UIGraphicsBeginImageContext(self.bounds.size)
+        UIGraphicsBeginImageContextWithOptions(self.bounds.size, false, 0)
         self.strokeColor.setStroke()
         if self.incrementalImage == nil {
             let rectPath = UIBezierPath(rect: self.bounds)
@@ -128,14 +134,15 @@ class VMSignatureView: UIView {
     public func clear() {
         self.path.removeAllPoints()
         self.incrementalImage = nil
+        self.hasSignature = false
         self.setNeedsDisplay()
     }
     
     // Save the Signature as an UIImage
-    public func getSignature(scale:CGFloat = 1) -> UIImage? {
+    public func getSignature(scale:CGFloat = 0) -> UIImage? {
         if !self.hasSignature { return nil }
         UIGraphicsBeginImageContextWithOptions(self.bounds.size, false, scale)
-        self.path.stroke()
+        self.incrementalImage?.draw(at: CGPoint.zero)
         let signature = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return signature
