@@ -13,9 +13,9 @@ A custom view to capture signature from user.
 
 This clears the view
 
-* `getSignature(scale:CGFloat = 1) -> UIImage?`
+* `getSignature(scale:CGFloat = 0) -> UIImage?`
 
-This returns the signature with scale factor. Default scale factor is 1
+This returns the signature with scale factor to apply to the bitmap. If you specify a value of 0.0, the scale factor is set to the scale factor of the device’s main screen.
 
 #### Properties
 
@@ -29,7 +29,7 @@ Sets the UIColor of the signature stroke
 
 * `hasSignature: Bool`
 
-This is a computed read-only property which returns `true` or `true` if the view contains a signature or not
+Returns `true` or `false` depending on whether the view contains a signature or not
 
 * `delegate: VMSignatureDelegate?`
 
