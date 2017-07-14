@@ -35,7 +35,7 @@ Returns `true` or `false` depending on whether the view contains a signature or 
 
 Sets the delegate for the view
 
-#### Optional Protocol Methods
+#### Protocol Methods
 
 * `startedDrawing()`
 
