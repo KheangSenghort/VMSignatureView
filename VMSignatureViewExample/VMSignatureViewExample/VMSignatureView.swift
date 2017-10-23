@@ -30,6 +30,8 @@ class VMSignatureView: UIView {
         }
     }
     
+    @IBInspectable public var backgroundImage: UIImage? = nil 
+    
     public var hasSignature = false
     
     // MARK: - Private properties
@@ -56,6 +58,9 @@ class VMSignatureView: UIView {
     
     // MARK: - Draw
     override public func draw(_ rect: CGRect) {
+        if self.incrementalImage == nil {
+            self.backgroundImage?.draw(in: self.bounds)
+        }
         self.incrementalImage?.draw(in: rect)
         self.strokeColor.setStroke()
         self.path.stroke()
@@ -135,6 +140,7 @@ class VMSignatureView: UIView {
             let rectPath = UIBezierPath(rect: self.bounds)
             UIColor.white.setFill()
             rectPath.fill()
+            self.backgroundImage?.draw(in: self.bounds)
         }
         self.incrementalImage?.draw(at: CGPoint.zero)
         path.stroke()
